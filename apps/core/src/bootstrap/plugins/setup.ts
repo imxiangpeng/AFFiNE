@@ -349,6 +349,9 @@ export const createOrGetGlobalThis = (
       Element: globalThis.Element,
       SVGElement: globalThis.SVGElement,
 
+      // widgets plugin uses these
+      customElements: globalThis.customElements,
+
       // fixme: use our own db api
       indexedDB: globalThis.indexedDB,
       IDBRequest: globalThis.IDBRequest,
