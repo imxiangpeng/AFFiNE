@@ -37,6 +37,10 @@ export const routes = [
     lazy: () => import('./pages/expired'),
   },
   {
+    path: '/openApp',
+    lazy: () => import('./pages/open-app'),
+  },
+  {
     path: '*',
     lazy: () => import('./pages/404'),
   },
