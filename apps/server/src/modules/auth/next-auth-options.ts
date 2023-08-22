@@ -24,9 +24,14 @@ function getSchemaFromCallbackUrl(origin: string, callbackUrl: string) {
   return searchParams.has('schema') ? searchParams.get('schema') : null;
 }
 
-function wrapUrlWithSchema(url: string, schema: string | null) {
+function wrapUrlWithOpenApp(
+  origin: string,
+  url: string,
+  schema: string | null
+) {
   if (schema) {
-    return `${schema}://open-url?${url}`;
+    const urlWithSchema = `${schema}://open-url?${url}`;
+    return `${origin}/openApp?url=${encodeURIComponent(urlWithSchema)}`;
   }
   return url;
 }
@@ -86,9 +91,10 @@ export const NextAuthOptionsProvider: FactoryProvider<NextAuthOptions> = {
             if (!callbackUrl) {
               throw new Error('callbackUrl is not set');
             }
-            const schema = getSchemaFromCallbackUrl(origin, callbackUrl);
-            const wrappedUrl = wrapUrlWithSchema(url, schema);
             // hack: check if link is opened via desktop
+            const schema = getSchemaFromCallbackUrl(origin, callbackUrl);
+            const wrappedUrl = wrapUrlWithOpenApp(origin, url, schema);
+
             const result = await mailer.sendMail({
               to: identifier,
               from: provider.from,

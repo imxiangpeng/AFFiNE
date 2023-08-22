@@ -171,7 +171,7 @@ module.exports = {
       await cp(
         resolve(__dirname, '../../packages/sdk'),
         resolve(__dirname, './node_modules/@affine/sdk'),
-        {a
+        {
           recursive: true,
           force: true,
         }
