@@ -30,7 +30,7 @@ function wrapUrlWithOpenApp(
   schema: string | null
 ) {
   if (schema) {
-    const urlWithSchema = `${schema}://open-url?${url}`;
+    const urlWithSchema = `${schema}://sign-in?${url}`;
     return `${origin}/openApp?url=${encodeURIComponent(urlWithSchema)}`;
   }
   return url;

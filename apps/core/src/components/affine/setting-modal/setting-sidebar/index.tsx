@@ -21,7 +21,7 @@ import { Suspense } from 'react';
 import { useMemo } from 'react';
 
 import { openAuthModalAtom } from '../../../../atoms';
-import { useCurrenLoginStatus } from '../../../../hooks/affine/use-curren-login-status';
+import { useCurrentLoginStatus } from '../../../../hooks/affine/use-curren-login-status';
 import { useCurrentUser } from '../../../../hooks/affine/use-current-user';
 import { useCurrentWorkspace } from '../../../../hooks/current/use-current-workspace';
 import type {
@@ -110,7 +110,7 @@ export const SettingSidebar = ({
   onAccountSettingClick: () => void;
 }) => {
   const t = useAFFiNEI18N();
-  const loginStatus = useCurrenLoginStatus();
+  const loginStatus = useCurrentLoginStatus();
   return (
     <div className={settingSlideBar} data-testid="settings-sidebar">
       <div className={sidebarTitle}>{t['Settings']()}</div>

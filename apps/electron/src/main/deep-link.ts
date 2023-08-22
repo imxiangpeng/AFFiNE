@@ -3,7 +3,10 @@ import path from 'path';
 
 import { buildType, isDev } from './config';
 import { logger } from './logger';
-import { handleOpenUrlInPopup, restoreOrCreateWindow } from './main-window';
+import {
+  handleOpenUrlInHiddenWindow,
+  restoreOrCreateWindow,
+} from './main-window';
 
 let protocol = buildType === 'stable' ? 'affine' : `affine-${buildType}`;
 if (isDev) {
@@ -49,12 +52,26 @@ export function setupDeepLink(app: App) {
 async function handleAffineUrl(url: string) {
   logger.info('open affine url', url);
   const urlObj = new URL(url);
-  if (urlObj.hostname === 'open-url') {
+  logger.info('handle affine schema action', urlObj.hostname);
+  // handle more actions here
+  // hostname is the action name
+  if (urlObj.hostname === 'sign-in') {
     const urlToOpen = urlObj.search.slice(1);
     if (urlToOpen) {
-      handleOpenUrlInPopup(urlToOpen).catch(e => {
-        logger.error('failed to open url in popup', e);
-      });
+      await handleSignIn(urlToOpen);
+    }
+  }
+}
+
+async function handleSignIn(url: string) {
+  if (url) {
+    try {
+      // tell main window to be at loading state
+      const window = await handleOpenUrlInHiddenWindow(url);
+      logger.info('opened url in popup', window.webContents.getURL());
+      // window will be destroyed when login is finished
+    } catch (e) {
+      logger.error('failed to open url in popup', e);
     }
   }
 }

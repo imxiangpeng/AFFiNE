@@ -123,44 +123,12 @@ async function createWindow() {
 
 // singleton
 let browserWindow: BrowserWindow | undefined;
-let popup: BrowserWindow | undefined;
-
-function createPopupWindow() {
-  if (!popup || popup?.isDestroyed()) {
-    const mainExposedMeta = getExposedMeta();
-    popup = new BrowserWindow({
-      width: 1200,
-      height: 600,
-      alwaysOnTop: true,
-      resizable: false,
-      webPreferences: {
-        preload: join(__dirname, './preload.js'),
-        additionalArguments: [
-          `--main-exposed-meta=` + JSON.stringify(mainExposedMeta),
-          // popup window does not need helper process, right?
-        ],
-      },
-    });
-    popup.on('close', e => {
-      e.preventDefault();
-      popup?.destroy();
-      popup = undefined;
-    });
-    browserWindow?.webContents.once('did-finish-load', () => {
-      closePopup();
-    });
-  }
-  return popup;
-}
 
 /**
  * Restore existing BrowserWindow or Create new BrowserWindow
  */
 export async function restoreOrCreateWindow() {
-  browserWindow =
-    browserWindow || BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
-
-  if (browserWindow === undefined) {
+  if (!browserWindow || browserWindow.isDestroyed()) {
     browserWindow = await createWindow();
   }
 
@@ -172,17 +140,27 @@ export async function restoreOrCreateWindow() {
   return browserWindow;
 }
 
-export async function handleOpenUrlInPopup(url: string) {
-  const popup = createPopupWindow();
-  await popup.loadURL(url);
-}
-
-export function closePopup() {
-  if (!popup?.isDestroyed()) {
-    popup?.close();
-    popup?.destroy();
-    popup = undefined;
-  }
+export async function handleOpenUrlInHiddenWindow(url: string) {
+  const mainExposedMeta = getExposedMeta();
+  const win = new BrowserWindow({
+    width: 1200,
+    height: 600,
+    webPreferences: {
+      preload: join(__dirname, './preload.js'),
+      additionalArguments: [
+        `--main-exposed-meta=` + JSON.stringify(mainExposedMeta),
+        // popup window does not need helper process, right?
+      ],
+    },
+    show: true,
+  });
+  win.on('close', e => {
+    e.preventDefault();
+    win?.destroy();
+  });
+  logger.info('loading page at', url);
+  await win.loadURL(url);
+  return win;
 }
 
 export function reloadApp() {

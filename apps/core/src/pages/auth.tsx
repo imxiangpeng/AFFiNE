@@ -13,7 +13,7 @@ import { useCallback } from 'react';
 import { type LoaderFunction, redirect, useParams } from 'react-router-dom';
 import { z } from 'zod';
 
-import { useCurrenLoginStatus } from '../hooks/affine/use-curren-login-status';
+import { useCurrentLoginStatus } from '../hooks/affine/use-curren-login-status';
 import { useCurrentUser } from '../hooks/affine/use-current-user';
 import { RouteLogic, useNavigateHelper } from '../hooks/use-navigate-helper';
 
@@ -119,7 +119,7 @@ export const loader: LoaderFunction = async args => {
   return null;
 };
 export const Component = () => {
-  const loginStatus = useCurrenLoginStatus();
+  const loginStatus = useCurrentLoginStatus();
   const { jumpToExpired } = useNavigateHelper();
 
   if (loginStatus === 'unauthenticated') {
