@@ -173,7 +173,6 @@ export type UIHandlers = {
   handleMinimizeApp: () => Promise<any>;
   handleMaximizeApp: () => Promise<any>;
   handleCloseApp: () => Promise<any>;
-  handleFinishLogin: () => Promise<void>;
   getGoogleOauthCode: () => Promise<any>;
 };
 

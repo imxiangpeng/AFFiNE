@@ -7,6 +7,7 @@ import {
   handleOpenUrlInHiddenWindow,
   restoreOrCreateWindow,
 } from './main-window';
+import { uiSubjects } from './ui';
 
 let protocol = buildType === 'stable' ? 'affine' : `affine-${buildType}`;
 if (isDev) {
@@ -69,7 +70,13 @@ async function handleSignIn(url: string) {
       // tell main window to be at loading state
       const window = await handleOpenUrlInHiddenWindow(url);
       logger.info('opened url in popup', window.webContents.getURL());
-      // window will be destroyed when login is finished
+      // check path
+      // - if path === /auth/signIn, we know sign in succeeded
+      // - if path === expired, we know sign in failed
+      const finalUrl = new URL(window.webContents.getURL());
+      console.log('final url', finalUrl);
+      window.destroy();
+      uiSubjects.onFinishLogin.next(finalUrl.pathname === '/auth/signIn');
     } catch (e) {
       logger.error('failed to open url in popup', e);
     }

@@ -1,3 +1,4 @@
+import { toast } from '@affine/component';
 import {
   AuthModal as AuthModalBase,
   type AuthModalProps as AuthModalBaseProps,
@@ -85,8 +86,15 @@ export const AuthModal: FC<AuthModalProps> = ({
 
   useEffect(() => {
     if (isDesktop) {
-      return window.events?.ui.onFinishLogin(() => {
+      return window.events?.ui.onFinishLogin((success: boolean) => {
         setOpen(false);
+        // TODO: add i18n
+        if (success) {
+          toast('Login success');
+        } else {
+          toast('Login failed');
+        }
+        // todo: refresh login status
       });
     }
   }, [setOpen]);

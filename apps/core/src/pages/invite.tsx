@@ -1,5 +1,4 @@
 import { AcceptInvitePage } from '@affine/component/member-components';
-import { isDesktop } from '@affine/env/constant';
 import {
   acceptInviteByInviteIdMutation,
   acceptInviteByWorkspaceIdMutation,
@@ -26,11 +25,7 @@ export const Component = (): ReactElement => {
   });
 
   const onOpenAffine = useCallback(() => {
-    if (isDesktop) {
-      window.apis.ui.handleFinishLogin();
-    } else {
-      jumpToIndex(RouteLogic.REPLACE);
-    }
+    jumpToIndex(RouteLogic.REPLACE);
   }, [jumpToIndex]);
 
   useEffect(() => {

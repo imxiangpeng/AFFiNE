@@ -5,7 +5,7 @@ import { uiSubjects } from './subject';
  * Events triggered by application menu
  */
 export const uiEvents = {
-  onFinishLogin: (fn: () => void) => {
+  onFinishLogin: (fn: (success: boolean) => void) => {
     const sub = uiSubjects.onFinishLogin.subscribe(fn);
     return () => {
       sub.unsubscribe();
