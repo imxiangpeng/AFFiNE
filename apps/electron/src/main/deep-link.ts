@@ -1,5 +1,6 @@
+import path from 'node:path';
+
 import type { App } from 'electron';
-import path from 'path';
 
 import { buildType, isDev } from './config';
 import { logger } from './logger';
